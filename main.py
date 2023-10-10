@@ -14,11 +14,19 @@ from fastapi import FastAPI, UploadFile, File, Body
 from starlette.responses import FileResponse
 from starlette.websockets import WebSocket
 
+import schemas
 from config.base import settings, TEMP_FOLDER_PATH, BASE_DOMAIN
 from model import TTSItem, TTSVoiceItem
 from service import inference_pipeline_punc, inference_pipeline_asr
 
+from funasr_service import FunASR
+from utils import base64_decode
+
 app = FastAPI(title="ASR & TTS", summary="ASR & TTS API")
+
+
+# ASR ****************************************
+asr = FunASR()
 
 
 @app.get("/get_file/{file_name}")
@@ -75,6 +83,21 @@ async def api_asr(
     ret = {"results": rec_result["text"], "code": 0}
     print(ret)
     return ret
+
+
+@app.post("/api/asr")
+async def api_asr_from_base64(asr_req: schemas.ASRRequest):
+    resp = {
+        "code": 0,
+        "message": "操作成功！",
+        "success": True,
+        "data": {"text": ""},
+
+    }
+    audio_bytes = base64_decode(asr_req.audio_base64)
+    recognition_data = await asr.recognition_from_bytes(audio_bytes)
+    resp["data"] = {"text": recognition_data["results"]}
+    return resp
 
 
 @app.websocket("/")
