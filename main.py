@@ -20,7 +20,8 @@ from model import TTSItem, TTSVoiceItem
 from service import inference_pipeline_punc, inference_pipeline_asr
 
 from funasr_service import FunASR
-from utils import base64_decode
+from tts_service import TTSService
+from utils import base64_decode, base64_encode
 
 app = FastAPI(title="ASR & TTS", summary="ASR & TTS API")
 
@@ -86,17 +87,46 @@ async def api_asr(
 
 
 @app.post("/api/asr")
-async def api_asr_from_base64(asr_req: schemas.ASRRequest):
+async def api_tts_from_base64(asr_req: schemas.ASRRequest):
     resp = {
         "code": 0,
         "message": "操作成功！",
         "success": True,
         "data": {"text": ""},
-
     }
     audio_bytes = base64_decode(asr_req.audio_base64)
     recognition_data = await asr.recognition_from_bytes(audio_bytes)
     resp["data"] = {"text": recognition_data["results"]}
+    return resp
+
+
+@app.post("/api/tts")
+async def api_tts_to_base64(tts_req: schemas.TTSRequest):
+    resp = {
+        "code": 0,
+        "message": "操作成功！",
+        "success": True,
+        "data": {"base64": "", "format": "wav"},
+    }
+    tts_service = TTSService(
+        text=tts_req.text,
+        voice=tts_req.voice,
+        speed=tts_req.speed,
+        volume=tts_req.volume,
+    )
+    b_wav_data = await tts_service.get_tts_wav_data()
+    resp["data"] = {"base64": base64_encode(b_wav_data), "format": "wav"}
+    return resp
+
+
+@app.get("/api/tts_voices")
+async def api_tts_voices():
+    resp = {"code": 0, "message": "操作成功！", "success": True, "data": {"voice_list": []}}
+    voice_list = [
+        {"id": 1, "value": "xinxin", "label": "心心", "comment": "女声"},
+        {"id": 2, "value": "langlang", "label": "朗朗", "comment": "男声"},
+    ]
+    resp["data"] = {"voice_list": voice_list}
     return resp
 
 
