@@ -23,7 +23,7 @@
 ### FastAPI方式启动HTTP服务
 
 ```shell
-uvicorn main:app --reload --host=0.0.0.0
+uvicorn main:app --reload --host=0.0.0.0 --port=32101
 ```
 
 
@@ -31,7 +31,7 @@ uvicorn main:app --reload --host=0.0.0.0
 
 ```shell
 
-nohup uvicorn main:app --reload --host=0.0.0.0 --port=8000 > uvicorn.log 2>&1 &
+nohup uvicorn main:app --reload --host=0.0.0.0 --port=32101 > uvicorn.log 2>&1 &
 
 ```
 
