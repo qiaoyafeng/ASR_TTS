@@ -11,6 +11,7 @@ import ffmpeg
 from edge_tts import VoicesManager
 
 from fastapi import FastAPI, UploadFile, File, Body
+from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import FileResponse
 from starlette.websockets import WebSocket
 
@@ -24,6 +25,20 @@ from tts_service import TTSService
 from utils import base64_decode, base64_encode
 
 app = FastAPI(title="ASR & TTS", summary="ASR & TTS API")
+
+
+origins = [
+    "*",
+]
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # ASR ****************************************
