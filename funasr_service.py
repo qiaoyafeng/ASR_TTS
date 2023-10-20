@@ -7,6 +7,8 @@ from modelscope.pipelines import pipeline
 from modelscope.utils.constant import Tasks
 from modelscope.utils.logger import get_logger
 
+from config.base import TEMP_FOLDER_PATH
+
 logger = get_logger(log_level=logging.CRITICAL)
 logger.setLevel(logging.CRITICAL)
 
@@ -55,9 +57,8 @@ class FunASR:
 
     async def recognition_from_bytes(self, audio, add_pun: int = 1):
         print(f"recognition_from_bytes ...")
-
-        # audio_path = f"asr_example_zh.wav"
-        audio_path = f"asr.wav"
+        audio_name = f"{uuid.uuid4().hex}.wav"
+        audio_path = f"{TEMP_FOLDER_PATH}/{audio_name}"
         async with aiofiles.open(audio_path, "wb") as out_file:
             await out_file.write(audio)
 
