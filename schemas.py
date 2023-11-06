@@ -9,5 +9,5 @@ class ASRRequest(BaseModel):
 class TTSRequest(BaseModel):
     text: str
     voice: str = "zh-CN-XiaoxiaoNeural"
-    speed: float = 1.0
-    volume: float = 1.0
+    speed: float = 0.0
+    volume: float = 0.0
