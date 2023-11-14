@@ -73,10 +73,10 @@ class FunASR:
         )
 
         rec_result = self.inference_pipeline_asr(audio_in=audio_bytes, param_dict={})
-        if add_pun:
+        if add_pun and "text" in rec_result:
             rec_result = self.inference_pipeline_punc(
                 text_in=rec_result["text"], param_dict={"cache": list()}
             )
-        ret = {"results": rec_result["text"], "code": 0}
+        ret = {"results": rec_result["text"] if "text" in rec_result else "", "code": 0}
         print(ret)
         return ret
