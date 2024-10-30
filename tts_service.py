@@ -26,7 +26,7 @@ class TTSService:
     async def get_tts_wav_data(self):
         audio_name = f"{uuid.uuid4().hex}.wav"
         audio_path = f"{TEMP_FOLDER_PATH}/{audio_name}"
-        communicate = edge_tts.Communicate(text=self.text, voice=self.voice, rate=self.speed, volume=self.volume)
+        communicate = edge_tts.Communicate(text=self.text, voice=self.voice, rate=self.speed, volume=self.volume, proxy="http://vpnproxy.hxq.cn:16397")
         await communicate.save(audio_path)
         audio, sampling_rate = soundfile.read(audio_path)
 

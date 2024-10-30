@@ -72,7 +72,7 @@ def read_item(file_name: str):
 async def api_tts(tts_item: TTSItem):
     audio_name = f"{str(uuid.uuid1())}.wav"
     audio_path = f"{TEMP_FOLDER_PATH}/{audio_name}"
-    communicate = edge_tts.Communicate(tts_item.text, tts_item.voice)
+    communicate = edge_tts.Communicate(tts_item.text, tts_item.voice, proxy="http://vpnproxy.hxq.cn:16397")
     await communicate.save(audio_path)
     audio_url = f"{BASE_DOMAIN}/get_file/{audio_name}"
     return {"audio_url": audio_url}
